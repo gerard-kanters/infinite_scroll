@@ -39,15 +39,28 @@ switch(get_input('items_type')){
 			}
 		}
 		break;
-	case 'annotation': 
-		foreach ($json as $child) {
-			$json = $child;
+	case 'annotation':
+		// Get first item with guid
+		$i = 100;
+		while($i > 0) {
+			foreach ($json as $child) {
+				$json = $child;
+			}
+
+			if (isset($json->guid)) {
+				$i = 0;
+				break;
+			}
+
+			$i--;
 		}
+
 		$json = elgg_get_annotations(array(
-			'items' => $json->guid,
-			'offset' => get_input('offset'),
+			'guid' => $json->guid,
+			'offset' => get_input('offset') + 2,
 			'limit' => 25,
 		));
+
 		break;
 	case 'river':
 		$json = $json->activity;
